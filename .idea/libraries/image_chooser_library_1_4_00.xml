@@ -1,0 +1,10 @@
+<component name="libraryTable">
+  <library name="image-chooser-library-1.4.00">
+    <CLASSES>
+      <root url="file://$PROJECT_DIR$/app/build/intermediates/exploded-aar/com.kbeanie/image-chooser-library/1.4.00/res" />
+      <root url="jar://$PROJECT_DIR$/app/build/intermediates/exploded-aar/com.kbeanie/image-chooser-library/1.4.00/classes.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>
