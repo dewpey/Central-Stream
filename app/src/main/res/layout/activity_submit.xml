@@ -81,7 +81,7 @@
         android:layout_alignRight="@+id/Title"
         android:layout_alignEnd="@+id/Title"
         android:elevation="2dp"
-        android:onClick="clickOnAddImage" />
+        android:onClick="onClickPickImage" />
 
     <ImageView
         android:layout_width="56dp"
@@ -94,7 +94,8 @@
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
         android:padding="10dp"
-        android:layout_above="@+id/PreviewImage" />
+        android:layout_above="@+id/PreviewImage"
+        android:onClick="onPublishClick" />
 
     <ImageView
         android:layout_width="56dp"

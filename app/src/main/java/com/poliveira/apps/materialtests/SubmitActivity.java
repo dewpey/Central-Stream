@@ -5,7 +5,10 @@ import android.app.Dialog;
 import android.app.TimePickerDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.location.Address;
+import android.media.Image;
 import android.net.Uri;
 import android.os.Environment;
 import android.provider.MediaStore;
@@ -13,6 +16,8 @@ import android.support.v4.app.DialogFragment;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.text.format.DateFormat;
+import android.util.Log;
+import android.view.Display;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -24,74 +29,53 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.kbeanie.imagechooser.api.ChooserType;
-import com.kbeanie.imagechooser.api.ChosenImage;
-import com.kbeanie.imagechooser.api.ImageChooserManager;
+
+import com.parse.Parse;
+import com.parse.ParseFile;
 import com.parse.ParseObject;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileNotFoundException;
 
 
 public class SubmitActivity extends ActionBarActivity {
-
-
-    private Uri mImageCaptureUri;
-    private ImageView mImageView;
-
-    private static final int PICK_FROM_CAMERA = 1;
-    private static final int PICK_FROM_FILE = 2;
+    ImageView chosenImageView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_submit);
+        chosenImageView = (ImageView) this.findViewById(R.id.PreviewImage);
 
-        final String [] items           = new String [] {"From Camera", "From SD Card"};
-        ArrayAdapter<String> adapter  = new ArrayAdapter<String> (this, android.R.layout.select_dialog_item,items);
-        AlertDialog.Builder builder     = new AlertDialog.Builder(this);
-
-        builder.setTitle("Select Image");
-        builder.setAdapter( adapter, new DialogInterface.OnClickListener() {
-            public void onClick( DialogInterface dialog, int item ) {
-                if (item == 0) {
-                    Intent intent    = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                    File file        = new File(Environment.getExternalStorageDirectory(),
-                            "tmp_avatar_" + String.valueOf(System.currentTimeMillis()) + ".jpg");
-                    mImageCaptureUri = Uri.fromFile(file);
-
-                    try {
-                        intent.putExtra(android.provider.MediaStore.EXTRA_OUTPUT, mImageCaptureUri);
-                        intent.putExtra("return-data", true);
-
-                        startActivityForResult(intent, PICK_FROM_CAMERA);
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-
-                    dialog.cancel();
-                } else {
-                    Intent intent = new Intent();
-
-                    intent.setType("image/*");
-                    intent.setAction(Intent.ACTION_GET_CONTENT);
-
-                    startActivityForResult(Intent.createChooser(intent, "Complete action using"), PICK_FROM_FILE);
-                }
-            }
-        } );
-
-        final AlertDialog dialog = builder.create();
-
-        mImageView = (ImageView) findViewById(R.id.PreviewImage);
-
-        ((Button) findViewById(R.id.fakebutton)).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dialog.show();
-            }
-        });
     }
+    public void onClickPickImage(View v) {
+        Intent choosePictureIntent = new Intent(Intent.ACTION_PICK,android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+        startActivityForResult(choosePictureIntent, 0);
+    }
+    Bitmap bmp;
+    protected void onActivityResult(int requestCode, int resultCode,Intent intent) {
+        super.onActivityResult(requestCode, resultCode, intent);
+        if (resultCode == RESULT_OK) {
+            Uri imageFileUri = intent.getData();
+            Display currentDisplay = getWindowManager().getDefaultDisplay();
+            int dw = currentDisplay.getWidth();
+            int dh = currentDisplay.getHeight() / 2 - 100;
+            try {
+                BitmapFactory.Options bmpFactoryOptions = new BitmapFactory.Options();
+                bmpFactoryOptions.inJustDecodeBounds = true;
+                bmp = BitmapFactory.decodeStream(getContentResolver().openInputStream(imageFileUri), null, bmpFactoryOptions);
+                bmpFactoryOptions.inSampleSize = 2;
+                bmpFactoryOptions.inJustDecodeBounds = false;
+                bmp = BitmapFactory.decodeStream(getContentResolver().openInputStream(
+                        imageFileUri), null, bmpFactoryOptions);
+                chosenImageView.setImageBitmap(bmp);
 
+            } catch (FileNotFoundException e) {
+                Log.v("ERROR", e.toString());
+            }
+        }
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -118,7 +102,16 @@ public class SubmitActivity extends ActionBarActivity {
 
     public void onPublishClick(View v) {
         ParseObject submitInfo = new ParseObject("Activities");
+        // Create a column named "ImageFile" and insert the image
+        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+        bmp.compress(Bitmap.CompressFormat.PNG, 100, stream);
+        byte[] image = stream.toByteArray();
+        ParseObject imgupload = new ParseObject("Activities");
+        imgupload.put("Thumbnail.png", image);
+        imgupload.saveInBackground();
 
+        // Create the class and the columns
+        submitInfo.saveInBackground();
 /*        EditText Title = (EditText) findViewById(R.id.Title);
         EditText Address = (EditText) findViewById(R.id.Address);
         EditText StartTime = (EditText) findViewById(R.id.StartTime);
@@ -169,8 +162,6 @@ public class SubmitActivity extends ActionBarActivity {
     public void exit(View v){
         this.finish();
     }
-    public void clickOnAddImage(View v){
-        Button fakeButton1 = (Button) findViewById(R.id.fakebutton);
-        fakeButton1.performClick();
-    }
-}
+
+   }
+

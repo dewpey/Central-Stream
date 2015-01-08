@@ -93,7 +93,6 @@
     <orderEntry type="library" exported="" name="bolts-android-1.1.4" level="project" />
     <orderEntry type="library" exported="" name="1_bolts-android-1.1.4" level="project" />
     <orderEntry type="library" exported="" name="cardslib-cards-2.0.1" level="project" />
-    <orderEntry type="library" exported="" name="image-chooser-library-1.4.00" level="project" />
     <orderEntry type="library" exported="" name="appcompat-v7-21.0.0" level="project" />
     <orderEntry type="library" exported="" name="support-annotations-21.0.0" level="project" />
   </component>
