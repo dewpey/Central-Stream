@@ -45,8 +45,7 @@
         android:layout_marginRight="16dp"
         android:paddingTop="10dp"
         android:onClick="clickOnTextView"
-        android:focusableInTouchMode="true"
-        android:focusable="false" />
+        android:focusableInTouchMode="true"/>
     <include
         layout="@layout/toolbar_default"
         android:id="@+id/include"
@@ -111,15 +110,45 @@
         android:layout_above="@+id/PreviewImage"
         android:onClick="exit" />
 
-    <Button
+    <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="New Button"
-        android:id="@+id/fakebutton"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:visibility="gone" />
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="@string/clicktosetTime"
+        android:id="@+id/startTime"
+        android:textColor="@color/myEditTextColor"
+        android:onClick="showStartTimePicker"
+        android:layout_below="@+id/Starting"
+        android:layout_toRightOf="@+id/imageView2"
+        android:layout_toEndOf="@+id/imageView2"
+        android:paddingTop="10dp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="@string/Starting"
+        android:id="@+id/Starting"
+        android:layout_below="@+id/Address"
+        android:layout_alignLeft="@+id/Address"
+        android:layout_alignStart="@+id/Address"
+        android:textColor="@color/myTextSecondaryColor"
+        android:paddingTop="10dp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="@string/clicktosetDate"
+        android:id="@+id/startDate"
+        android:textColor="@color/myEditTextColor"
+        android:onClick="showStartDatePicker"
+        android:layout_alignTop="@+id/startTime"
+        android:paddingTop="10dp"
+        android:layout_toRightOf="@+id/startTime"
+        android:paddingLeft="10dp"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true" />
 
 </RelativeLayout>
 </ScrollView>

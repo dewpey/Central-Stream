@@ -1,17 +1,11 @@
 package com.poliveira.apps.materialtests;
 
-import android.app.AlertDialog;
+
 import android.app.Dialog;
-import android.app.TimePickerDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.location.Address;
-import android.media.Image;
 import android.net.Uri;
-import android.os.Environment;
-import android.provider.MediaStore;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
@@ -21,33 +15,44 @@ import android.view.Display;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ArrayAdapter;
-import android.widget.AutoCompleteTextView;
-import android.widget.Button;
-import android.widget.CheckBox;
+
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 
 import com.parse.Parse;
+
 import com.parse.ParseFile;
 import com.parse.ParseObject;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 
 public class SubmitActivity extends ActionBarActivity {
     ImageView chosenImageView;
+    static int timeMode = 0;
+    static int dateMode = 0;
+    private static TextView startTime1=null;
+    private static TextView startDate1=null;
 
+    String sendingYear;
+    String sendingMonth;
+    String sendingDay;
+    String sendingHour;
+    String sendingMinutes;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_submit);
         chosenImageView = (ImageView) this.findViewById(R.id.PreviewImage);
-
+        startTime1= (TextView)findViewById(R.id.startTime);
+        startDate1= (TextView)findViewById(R.id.startDate);
     }
     public void onClickPickImage(View v) {
         Intent choosePictureIntent = new Intent(Intent.ACTION_PICK,android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
@@ -101,17 +106,30 @@ public class SubmitActivity extends ActionBarActivity {
     }
 
     public void onPublishClick(View v) {
+
         ParseObject submitInfo = new ParseObject("Activities");
+
+
+        String start = sendingYear + "-" + sendingMonth + "-" + sendingDay + "T" + sendingHour + ":" + sendingMinutes;
+        System.out.println(start);
+
+        submitInfo.saveInBackground();
         // Create a column named "ImageFile" and insert the image
+        if(!bmp = null){
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
         bmp.compress(Bitmap.CompressFormat.PNG, 100, stream);
         byte[] image = stream.toByteArray();
         ParseObject imgupload = new ParseObject("Activities");
         imgupload.put("Thumbnail.png", image);
+        //imgupload.put("Begin", )
+
         imgupload.saveInBackground();
 
+
+
+
         // Create the class and the columns
-        submitInfo.saveInBackground();
+
 /*        EditText Title = (EditText) findViewById(R.id.Title);
         EditText Address = (EditText) findViewById(R.id.Address);
         EditText StartTime = (EditText) findViewById(R.id.StartTime);
@@ -146,22 +164,83 @@ public class SubmitActivity extends ActionBarActivity {
         } else {
             submitInfo.put("Fundraiser", false);
         }*/
-
         submitInfo.saveInBackground();
-
     }
-    public void showTimePickerDialog(View v) {
+    public void showStartTimePicker(View v) {
+        timeMode = 0;
         DialogFragment newFragment = new TimePickerFragment();
         newFragment.show(getSupportFragmentManager(), "timePicker");
+        TextView startTimeTextView = (TextView) findViewById(R.id.startTime);
+        startTimeTextView.setTextColor(getResources().getColor(R.color.myTextSecondaryColor));
     }
-    public void clickOnTextView(View v){
-        TextView clickedTextView = (TextView) v;
-        clickedTextView.setText("");
-        clickedTextView.setTextColor(getResources().getColor(R.color.myTextPrimaryColor));
+
+    public void showStartDatePicker(View v) {
+        dateMode = 0;
+        DialogFragment newFragment = new DatePickerFragment();
+        newFragment.show(getSupportFragmentManager(), "datePicker");
+        TextView startDateTextView = (TextView) findViewById(R.id.startDate);
+        startDateTextView.setTextColor(getResources().getColor(R.color.myTextSecondaryColor));
+
+    }
+    public void clickOnEditText(View v){
+        EditText clickedEditText = (EditText) v;
+        clickedEditText.setText("");
+        clickedEditText.setTextColor(getResources().getColor(R.color.myTextPrimaryColor));
     }
     public void exit(View v){
         this.finish();
     }
 
+    public void onTimeRecieve(int hoursOfDay, int minute){
+        String TimeSuffix;
+        if(hoursOfDay > 12){
+            hoursOfDay = hoursOfDay-12;
+            TimeSuffix = "PM";
+        }else{
+            TimeSuffix = "AM";
+        }
+
+        if(hoursOfDay<10){
+            sendingHour = "0" + hoursOfDay;
+        }else {
+        sendingHour = Integer.toString(hoursOfDay);
+
+        }
+        if(minute < 10){
+            startTime1.setText(hoursOfDay + ":" + "0" + minute + " " + TimeSuffix);
+            sendingMinutes = Integer.toString(minute);
+            sendingMinutes = "0" + sendingMinutes;
+
+        }else{
+            startTime1.setText(hoursOfDay + ":" +  minute + " " + TimeSuffix);
+            sendingMinutes = Integer.toString(minute);
+
+
+        }
+        System.out.println(sendingHour + ":" + sendingMinutes);
+
+
+
+    }
+    public void onDateReceive(int year, int month, int day){
+        startDate1.setText((month+1) + "-" + day + "-" + year);
+        if((month+1)<10)
+        {
+            sendingMonth = "0" + (month+1);
+        }else {
+            sendingMonth = Integer.toString(month + 1);
+        }
+
+        sendingYear = Integer.toString(year);
+
+        if(day<10)
+        {
+            sendingDay = "0" + day;
+        }else {
+            sendingDay = Integer.toString(day);
+        }
+        System.out.println(sendingMonth + " " + sendingDay + " " + sendingYear);
+    }
    }
+
 

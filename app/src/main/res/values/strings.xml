@@ -17,5 +17,8 @@
     <string name="Description">Description</string>
     <string name="SportEvent">Sports</string>
     <string name="Fundraiser">Fundraiser</string>
+    <string name="Starting">Starting</string>
+    <string name="clicktosetDate">Click to set date...</string>
+    <string name="clicktosetTime">Click to set time...</string>
 
 </resources>

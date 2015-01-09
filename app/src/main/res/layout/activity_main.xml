@@ -56,7 +56,8 @@
             android:layout_width="@dimen/navigation_drawer_width"
             android:layout_height="match_parent"
             android:layout_gravity="start"
-            app:layout="@layout/fragment_navigation_drawer"/>
+            app:layout="@layout/fragment_navigation_drawer"
+            card:layout="@layout/fragment_navigation_drawer" />
 
 
 
