@@ -13,7 +13,7 @@ Code Matterials
 - [ ] Test app on multiple devices
 - [ ] Move app to Eclipse if needed
 - [ ] Finish layout of submit activity
-- [x] Add picture picking functionality
+- [V] Add picture picking functionality
 - [ ] Finish code of submit activity
 - [ ] Setup filtering of past dates on Parse.com
 - [ ] Setup parsing data for main activity
