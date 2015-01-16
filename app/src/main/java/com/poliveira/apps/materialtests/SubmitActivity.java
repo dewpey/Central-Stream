@@ -6,16 +6,21 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
+import android.provider.MediaStore;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.text.format.DateFormat;
+import android.util.Base64;
 import android.util.Log;
 import android.view.Display;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
+import java.io.File;
+
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -39,12 +44,21 @@ public class SubmitActivity extends ActionBarActivity {
     static int dateMode = 0;
     private static TextView startTime1=null;
     private static TextView startDate1=null;
+    private static TextView endTime1=null;
+    private static TextView endDate1=null;
 
-    String sendingYear;
-    String sendingMonth;
-    String sendingDay;
-    String sendingHour;
-    String sendingMinutes;
+
+    String startSendingYear;
+    String startSendingMonth;
+    String startSendingDay;
+    String startSendingHour;
+    String startSendingMinutes;
+
+    String endSendingYear;
+    String endSendingMonth;
+    String endSendingDay;
+    String endSendingHour;
+    String endSendingMinutes;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -53,6 +67,8 @@ public class SubmitActivity extends ActionBarActivity {
         chosenImageView = (ImageView) this.findViewById(R.id.PreviewImage);
         startTime1= (TextView)findViewById(R.id.startTime);
         startDate1= (TextView)findViewById(R.id.startDate);
+        endTime1= (TextView)findViewById(R.id.endTime);
+        endDate1= (TextView)findViewById(R.id.endDate);
     }
     public void onClickPickImage(View v) {
         Intent choosePictureIntent = new Intent(Intent.ACTION_PICK,android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
@@ -84,10 +100,9 @@ public class SubmitActivity extends ActionBarActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
+        // Inflate the menu; this adds items to the0 action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_submit, menu);
         return true;
-
     }
 
     @Override
@@ -109,47 +124,39 @@ public class SubmitActivity extends ActionBarActivity {
 
         ParseObject submitInfo = new ParseObject("Activities");
 
-
-        String start = sendingYear + "-" + sendingMonth + "-" + sendingDay + "T" + sendingHour + ":" + sendingMinutes;
-        System.out.println(start);
-
-        submitInfo.saveInBackground();
         // Create a column named "ImageFile" and insert the image
-        if(!bmp = null){
-        ByteArrayOutputStream stream = new ByteArrayOutputStream();
-        bmp.compress(Bitmap.CompressFormat.PNG, 100, stream);
-        byte[] image = stream.toByteArray();
-        ParseObject imgupload = new ParseObject("Activities");
-        imgupload.put("Thumbnail.png", image);
-        //imgupload.put("Begin", )
 
-        imgupload.saveInBackground();
 
+
+        ByteArrayOutputStream stream=new ByteArrayOutputStream();
+        bmp.compress(Bitmap.CompressFormat.PNG, 90, stream);
+        byte[] image=stream.toByteArray();
+        System.out.println("byte array:"+image);
+        ParseFile parseImage = new ParseFile("thumbnail.png", image);
+        String img_str = Base64.encodeToString(image, 0);
+        System.out.println("string:"+img_str);
+        submitInfo.put("thumbnail", parseImage);
 
 
 
         // Create the class and the columns
 
-/*        EditText Title = (EditText) findViewById(R.id.Title);
+        EditText Title = (EditText) findViewById(R.id.Title);
         EditText Address = (EditText) findViewById(R.id.Address);
-        EditText StartTime = (EditText) findViewById(R.id.StartTime);
-        EditText StartDate = (EditText) findViewById(R.id.StartDate);
-        EditText EndTime = (EditText) findViewById(R.id.EndTime);
-        EditText EndDate = (EditText) findViewById(R.id.EndDate);
-        EditText Description = (EditText) findViewById(R.id.Description);
-        CheckBox MemberExclusive = (CheckBox) findViewById(R.id.MemberExclusive);
-        CheckBox Sport = (CheckBox) findViewById(R.id.SportEvent);
+        EditText Description = (EditText) findViewById(R.id.descriptionText);
+        CheckBox MemberExclusive = (CheckBox) findViewById(R.id.memberExclusive);
+        CheckBox Sport = (CheckBox) findViewById(R.id.Sport);
         CheckBox Fundraiser = (CheckBox) findViewById(R.id.Fundraiser);
 
         submitInfo.put("Title", Title.getText().toString());
         submitInfo.put("Address", Address.getText().toString());
-        submitInfo.put("StartTime", StartTime.getText().toString());
-        submitInfo.put("StartDate", StartDate.getText().toString());
-        submitInfo.put("EndTime", EndTime.getText().toString());
-        submitInfo.put("EndDate", EndDate.getText().toString());
+        String Begin = startSendingMonth+"-"+startSendingDay+"-"+startSendingYear+"-T" + startSendingHour + "-" + startSendingMinutes;
+        String End = endSendingMonth+"-"+endSendingDay+"-"+endSendingYear+"-T" + endSendingHour + "-" + endSendingMinutes;
+        submitInfo.put("Begin", Begin);
+        submitInfo.put("End", End);
         submitInfo.put("Description", Description.getText().toString());
 
-        if (MemberExclusive.isChecked()) {
+       /* if (MemberExclusive.isChecked()) {
             submitInfo.put("MemberExclusive", true);
         } else {
             submitInfo.put("MemberExclusive", false);
@@ -182,6 +189,24 @@ public class SubmitActivity extends ActionBarActivity {
         startDateTextView.setTextColor(getResources().getColor(R.color.myTextSecondaryColor));
 
     }
+
+    public void showEndTimePicker(View v) {
+        timeMode = 1;
+        DialogFragment newFragment = new TimePickerFragment();
+        newFragment.show(getSupportFragmentManager(), "timePicker");
+        TextView endTimeTextView = (TextView) findViewById(R.id.endTime);
+        endTimeTextView.setTextColor(getResources().getColor(R.color.myTextSecondaryColor));
+    }
+
+    public void showEndDatePicker(View v) {
+        dateMode = 1;
+        DialogFragment newFragment = new DatePickerFragment();
+        newFragment.show(getSupportFragmentManager(), "datePicker");
+        TextView endDateTextView = (TextView) findViewById(R.id.endDate);
+        endDateTextView.setTextColor(getResources().getColor(R.color.myTextSecondaryColor));
+
+    }
+
     public void clickOnEditText(View v){
         EditText clickedEditText = (EditText) v;
         clickedEditText.setText("");
@@ -200,46 +225,80 @@ public class SubmitActivity extends ActionBarActivity {
             TimeSuffix = "AM";
         }
 
-        if(hoursOfDay<10){
-            sendingHour = "0" + hoursOfDay;
-        }else {
-        sendingHour = Integer.toString(hoursOfDay);
 
-        }
+        if(timeMode == 0){
+            if(hoursOfDay<10){
+                startSendingHour = "0" + hoursOfDay;
+            }else {
+                startSendingHour = Integer.toString(hoursOfDay);
+            }
         if(minute < 10){
             startTime1.setText(hoursOfDay + ":" + "0" + minute + " " + TimeSuffix);
-            sendingMinutes = Integer.toString(minute);
-            sendingMinutes = "0" + sendingMinutes;
+            startSendingMinutes = Integer.toString(minute);
+            startSendingMinutes = "0" + startSendingMinutes;
 
         }else{
             startTime1.setText(hoursOfDay + ":" +  minute + " " + TimeSuffix);
-            sendingMinutes = Integer.toString(minute);
+            startSendingMinutes = Integer.toString(minute);
 
+        }}
+        else{
+            if(hoursOfDay<10){
+                endSendingHour = "0" + hoursOfDay;
+            }else {
+                endSendingHour = Integer.toString(hoursOfDay);
+            }
+            if(minute < 10){
+                endTime1.setText(hoursOfDay + ":" + "0" + minute + " " + TimeSuffix);
+                endSendingMinutes = Integer.toString(minute);
+                endSendingMinutes = "0" + endSendingMinutes;
 
-        }
-        System.out.println(sendingHour + ":" + sendingMinutes);
+            }else{
+                endTime1.setText(hoursOfDay + ":" +  minute + " " + TimeSuffix);
+                endSendingMinutes = Integer.toString(minute);
+                }
+            System.out.println(endSendingHour + ":" + endSendingMinutes);
 
-
-
+            }
     }
     public void onDateReceive(int year, int month, int day){
-        startDate1.setText((month+1) + "-" + day + "-" + year);
-        if((month+1)<10)
-        {
-            sendingMonth = "0" + (month+1);
-        }else {
-            sendingMonth = Integer.toString(month + 1);
+
+        if(dateMode == 0) {
+            startDate1.setText((month + 1) + "-" + day + "-" + year);
+            if((month+1)<10)
+            {
+                startSendingMonth = "0" + (month+1);
+            }else {
+                startSendingMonth = Integer.toString(month + 1);
+            }
+
+            startSendingYear = Integer.toString(year);
+
+            if(day<10)
+            {
+                startSendingDay = "0" + day;
+            }else {
+                startSendingDay = Integer.toString(day);
+            }
+        }else{
+            endDate1.setText((month + 1) + "-" + day + "-" + year);
+            if((month+1)<10)
+            {
+                endSendingMonth = "0" + (month+1);
+            }else {
+                endSendingMonth = Integer.toString(month + 1);
+            }
+
+            endSendingYear = Integer.toString(year);
+
+            if(day<10)
+            {
+                endSendingDay = "0" + day;
+            }else {
+                endSendingDay = Integer.toString(day);
+            }
         }
 
-        sendingYear = Integer.toString(year);
-
-        if(day<10)
-        {
-            sendingDay = "0" + day;
-        }else {
-            sendingDay = Integer.toString(day);
-        }
-        System.out.println(sendingMonth + " " + sendingDay + " " + sendingYear);
     }
    }
 

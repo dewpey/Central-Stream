@@ -3,7 +3,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:card="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:id="@+id/RelativeLayout1">
 
     <include
         android:id="@+id/toolbar_actionbar"
@@ -28,7 +29,7 @@
                 android:layout_height="fill_parent">
 
 
-                <it.gmariotti.cardslib.library.view.CardListView
+                <it.gmariotti.cardslib.library.view.CardViewNative
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:id="@+id/myList"
@@ -37,7 +38,9 @@
                     android:layout_alignParentStart="true"
                     android:layout_alignParentRight="true"
                     android:layout_alignParentEnd="true"
-                    android:layout_above="@+id/include2" />
+                    card:card_layout_resourceID="@layout/native_material_largeimage_text_card"
+                    style="@style/card_external"
+                    android:layout_above="@+id/text1" />
 
                 <include
                     layout="@layout/toolbar_default"
@@ -46,6 +49,17 @@
                     android:layout_height="25dp"
                     android:layout_alignParentBottom="true"
                     android:layout_centerHorizontal="true" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:text="Medium Text"
+                    android:id="@+id/text1"
+                    android:layout_centerHorizontal="true"
+                    android:textColor="@color/myTextPrimaryColor"
+                    android:layout_above="@+id/include2" />
+
             </RelativeLayout>
         </FrameLayout>
 
@@ -77,4 +91,5 @@
         android:layout_alignParentTop="true"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true" />
+
 </RelativeLayout>

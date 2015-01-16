@@ -6,7 +6,7 @@
     tools:context="com.poliveira.apps.materialtests.SubmitActivity"
     android:onClick="onPublishClick">
 <RelativeLayout android:layout_width="wrap_content"
-    android:layout_height="600dp"
+    android:layout_height="700dp"
     android:focusableInTouchMode="false"
     android:nestedScrollingEnabled="false">
     <EditText
@@ -17,16 +17,14 @@
         android:textColor="@color/myEditTextColor"
         android:text="@string/Title"
         android:layout_marginTop="270dp"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true"
-        android:layout_marginRight="16dp"
         android:textSize="40sp"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:layout_marginLeft="16dp"
         android:paddingTop="10dp"
-        android:onClick="clickOnTextView"
-        android:focusable="false" />
+        android:onClick="clickOnEditText"
+        android:layout_alignRight="@+id/Sport"
+        android:layout_alignEnd="@+id/Sport" />
 
     <EditText
         android:layout_width="wrap_content"
@@ -37,15 +35,39 @@
         android:text="@string/Location"
         android:textColor="@color/myEditTextColor"
         android:layout_below="@+id/Title"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:layout_marginLeft="16dp"
-        android:layout_marginRight="16dp"
         android:paddingTop="10dp"
-        android:onClick="clickOnTextView"
-        android:focusableInTouchMode="true"/>
+        android:onClick="clickOnEditText"
+        android:focusableInTouchMode="true"
+        android:layout_alignRight="@+id/startDate"
+        android:layout_alignEnd="@+id/startDate"
+        android:layout_marginRight="16dp" />
+
+    <View
+        android:layout_width="fill_parent"
+        android:layout_height="1dp"
+        android:background="@android:color/darker_gray"
+        android:layout_below="@+id/Address"
+        android:paddingTop="10dp"
+        android:paddingBottom="10dp"
+        android:layout_marginTop="10dp"
+        android:id="@+id/firstDivider"
+        android:elevation="2dp"/>
+
+    <View
+        android:layout_width="fill_parent"
+        android:layout_height="1dp"
+        android:background="@android:color/darker_gray"
+        android:layout_below="@+id/endDate"
+        android:paddingTop="10dp"
+        android:paddingBottom="10dp"
+        android:layout_marginTop="10dp"
+        android:id="@+id/secondDivider"
+        android:elevation="2dp"/>
+
+
     <include
         layout="@layout/toolbar_default"
         android:id="@+id/include"
@@ -129,7 +151,7 @@
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:text="@string/Starting"
         android:id="@+id/Starting"
-        android:layout_below="@+id/Address"
+        android:layout_below="@+id/firstDivider"
         android:layout_alignLeft="@+id/Address"
         android:layout_alignStart="@+id/Address"
         android:textColor="@color/myTextSecondaryColor"
@@ -149,6 +171,92 @@
         android:paddingLeft="10dp"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="@string/ending"
+        android:id="@+id/Ending"
+        android:textColor="@color/myTextSecondaryColor"
+        android:paddingTop="10dp"
+        android:layout_below="@+id/startTime"
+        android:layout_alignLeft="@+id/Starting"
+        android:layout_alignStart="@+id/Starting" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="@string/clicktosetTime"
+        android:id="@+id/endTime"
+        android:textColor="@color/myEditTextColor"
+        android:onClick="showEndTimePicker"
+        android:paddingTop="10dp"
+        android:layout_below="@+id/Ending"
+        android:layout_alignLeft="@+id/startTime"
+        android:layout_alignStart="@+id/startTime" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="@string/clicktosetDate"
+        android:id="@+id/endDate"
+        android:textColor="@color/myEditTextColor"
+        android:onClick="showEndDatePicker"
+        android:paddingTop="10dp"
+        android:paddingLeft="10dp"
+        android:layout_alignBottom="@+id/endTime"
+        android:layout_toRightOf="@+id/endTime"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true" />
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/descriptionText"
+        android:textColor="@color/myEditTextColor"
+        android:text="@string/Description"
+        android:layout_marginTop="23dp"
+        android:textSize="20sp"
+        android:paddingTop="10dp"
+        android:onClick="clickOnEditText"
+        android:layout_below="@+id/secondDivider"
+        android:layout_alignLeft="@+id/Ending"
+        android:layout_alignStart="@+id/Ending"
+        android:layout_alignRight="@+id/Address"
+        android:layout_alignEnd="@+id/Address" />
+
+    <CheckBox
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/Fundraiser"
+        android:id="@+id/Fundraiser"
+        android:layout_below="@+id/descriptionText"
+        android:layout_alignLeft="@+id/descriptionText"
+        android:layout_alignStart="@+id/descriptionText"
+        android:layout_marginTop="25dp"
+        android:textColor="@color/myTextSecondaryColor" />
+
+    <CheckBox
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/MemberExclusive"
+        android:id="@+id/memberExclusive"
+        android:textColor="@color/myTextSecondaryColor"
+        android:layout_alignTop="@+id/Fundraiser"
+        android:layout_centerHorizontal="true" />
+
+    <CheckBox
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/SportEvent"
+        android:id="@+id/Sport"
+        android:layout_alignTop="@+id/memberExclusive"
+        android:layout_alignRight="@+id/descriptionText"
+        android:layout_alignEnd="@+id/descriptionText"
+        android:textColor="@color/myTextSecondaryColor" />
 
 </RelativeLayout>
 </ScrollView>

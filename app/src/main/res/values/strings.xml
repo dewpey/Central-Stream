@@ -20,5 +20,6 @@
     <string name="Starting">Starting</string>
     <string name="clicktosetDate">Click to set date...</string>
     <string name="clicktosetTime">Click to set time...</string>
+    <string name="ending">Ending</string>
 
 </resources>

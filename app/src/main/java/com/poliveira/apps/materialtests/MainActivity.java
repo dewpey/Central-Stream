@@ -7,20 +7,16 @@ import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.View;
-import android.widget.ListView;
 import android.widget.Toast;
 
 import com.parse.Parse;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 
+import it.gmariotti.cardslib.library.cards.actions.BaseSupplementalAction;
+import it.gmariotti.cardslib.library.cards.actions.TextSupplementalAction;
+import it.gmariotti.cardslib.library.cards.material.MaterialLargeImageCard;
 import it.gmariotti.cardslib.library.internal.Card;
-import it.gmariotti.cardslib.library.internal.CardArrayAdapter;
-import it.gmariotti.cardslib.library.internal.CardHeader;
-import it.gmariotti.cardslib.library.internal.CardThumbnail;
-import it.gmariotti.cardslib.library.view.CardListView;
-import it.gmariotti.cardslib.library.view.CardView;
 
 
 public class MainActivity extends ActionBarActivity implements NavigationDrawerCallbacks {
@@ -43,7 +39,7 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerC
         mNavigationDrawerFragment = (NavigationDrawerFragment) getFragmentManager().findFragmentById(R.id.fragment_drawer);
         mNavigationDrawerFragment.setup(R.id.fragment_drawer, (DrawerLayout) findViewById(R.id.drawer), mToolbar);
 
-        ArrayList<Card> cards = new ArrayList<Card>();
+ /*       ArrayList<Card> cards = new ArrayList<Card>();
 
         //Create a Card
         Card card = new Card(MainActivity.this);
@@ -51,16 +47,16 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerC
         //Create a CardHeader
         CardHeader header = new CardHeader(MainActivity.this);
 
-        String[] planets = new String[] { "Mercury", "Venus", "Earth", "Mars",
+        String[] planets = new String[]{"Mercury", "Venus", "Earth", "Mars",
                 "Jupiter", "Saturn", "Uranus", "Neptune"};
 
         header.setTitle(planets[1]);
 
 
-        CardArrayAdapter mCardArrayAdapter = new CardArrayAdapter(MainActivity.this,cards);
+        CardArrayAdapter mCardArrayAdapter = new CardArrayAdapter(MainActivity.this, cards);
 
         CardListView listView = (CardListView) MainActivity.this.findViewById(R.id.myList);
-        if (listView!=null){
+        if (listView != null) {
             listView.setAdapter(mCardArrayAdapter);
         }
 
@@ -74,7 +70,45 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerC
         header.setTitle(planets[3]);
         cards.add(card);
         cards.add(card);
-        cards.add(card);
+        cards.add(card);*/
+        // Set supplemental actions as text
+        ArrayList<BaseSupplementalAction> actions = new ArrayList<BaseSupplementalAction>();
+
+        // Set supplemental actions
+        TextSupplementalAction t1 = new TextSupplementalAction(MainActivity.this, R.id.text1);
+        t1.setOnActionClickListener(new BaseSupplementalAction.OnActionClickListener() {
+            @Override
+            public void onClick(Card card, View view) {
+                Toast.makeText(MainActivity.this," Click on Text SHARE ",Toast.LENGTH_SHORT).show();
+            }
+        });
+        actions.add(t1);
+
+        TextSupplementalAction t2 = new TextSupplementalAction(MainActivity.this, R.id.text1);
+        t2.setOnActionClickListener(new BaseSupplementalAction.OnActionClickListener() {
+            @Override
+            public void onClick(Card card, View view) {
+                Toast.makeText(MainActivity.this," Click on Text LEARN ",Toast.LENGTH_SHORT).show();
+            }
+        });
+        actions.add(t2);
+
+        //Create a Card, set the title over the image and set the thumbnail
+        MaterialLargeImageCard card =
+                MaterialLargeImageCard.with(MainActivity.this)
+                        .setTextOverImage("Italian Beaches")
+                        .setTitle("This is my favorite local beach")
+                        .setSubTitle("A wonderful place")
+                        .useDrawableId(R.drawable.ic_launcher)
+                        .setupSupplementalActions(R.layout.bigcard, actions)
+                        .build();
+
+        card.setOnClickListener(new Card.OnCardClickListener() {
+            @Override
+            public void onClick(Card card, View view) {
+                Toast.makeText(MainActivity.this," Click on ActionArea ",Toast.LENGTH_SHORT).show();
+            }
+        });
 
     }
 
